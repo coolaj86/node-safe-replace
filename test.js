@@ -5,7 +5,7 @@ var safeReplace = require('./').create();
 var fs = require('fs');
 
 safeReplace.writeFile('keep.txt', 'my precious').then(function () {
-  fs.readdir('.', function (nodes) {
+  fs.readdir('.', function (err, nodes) {
     console.log('file system nodes', nodes);
   });
 });
