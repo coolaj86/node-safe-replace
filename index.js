@@ -35,20 +35,20 @@ function create(options) {
   */
 
   var sfs = {
-    writeFile: function (filename, data, options) {
+    writeFileAsync: function (filename, data, options) {
       return sfs.stage(filename, data, options).then(function (tmpname) {
         //console.log(filename);
         return sfs.commit(tmpname, filename);
       });
     }
-  , stage: function (filename, data, options) {
+  , stageAsync: function (filename, data, options) {
       var tmpname = tmpnamefn(filename);
       //console.log(tmpname);
       return fs.writeFileAsync(tmpname, data, options).then(function () {
         return tmpname;
       });
     }
-  , commit: function (tmpname, filename) {
+  , commitAsync: function (tmpname, filename) {
       var bakname = baknamefn(filename);
       // this may not exist
       return fs.unlinkAsync(bakname).then(noop, noop).then(function () {
@@ -68,7 +68,7 @@ function create(options) {
         });
       });
     }
-  , revert: function (filename) {
+  , revertAsync: function (filename) {
       return new PromiseA(function (resolve, reject) {
         var bakname = baknamefn(filename);
         var tmpname = tmpnamefn(filename);
@@ -89,6 +89,10 @@ function create(options) {
   , baknamefn: baknamefn
   , create: create
   };
+  sfs.writeFile = sfs.writeFileAsync;
+  sfs.stage = sfs.stageAsync;
+  sfs.commit = sfs.commitAsync;
+  sfs.revert = sfs.revertAsync;
 
   return sfs;
 }

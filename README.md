@@ -38,30 +38,19 @@ In Node
 
 I ported that proccess to node.
 
+```
+sfs.writeFileAsync
+sfs.stageAsync
+sfs.commitAsync
+sfs.revertAsync
+```
+
 ```js
-// default behavior is to concat (filename + '.' + 'new')
-var safeReplace = require('safe-replace').create({ new: 'new', bak: 'bak' });
+// default behavior is to concat (filename + '.' + rnd() + '.tmp')
+var safeReplace = require('safe-replace').create({ tmp: 'tmp', bak: 'bak' });
 
 var data = new Buffer('A priceless document');
-safeReplace.writeFile('keep.txt', data, 'ascii').then(function () {
-  fs.readdir('.', function (nodes) {
-    console.log('file system nodes', nodes);
-    // keep.txt
-    // keep.txt.bak
-  });
-});
-
-// let's say I wrote keep.txt.x7t7sq926.tmp with my own mechanism
-safeReplace.commit('keep.txt.x7t7sq926.tmp', 'keep.txt').then(function () {
-  fs.readdir('.', function (nodes) {
-    console.log('file system nodes', nodes);
-    // keep.txt
-    // keep.txt.bak
-  });
-});
-
-// let's say I want to revert the file from the '.bak'
-safeReplace.revert('keep.txt').then(function () {
+safeReplace.writeFileAsync('keep.txt', data, 'ascii').then(function () {
   fs.readdir('.', function (nodes) {
     console.log('file system nodes', nodes);
     // keep.txt
@@ -70,12 +59,28 @@ safeReplace.revert('keep.txt').then(function () {
 });
 
 // let's say I want to write a tmp file and not commit it... weird
-safeReplace.stage('keep.txt', data, 'ascii').then(function (tmpname) {
+safeReplace.stageAsync('keep.txt', data, 'ascii').then(function (tmpname) {
+  fs.readdir('.', function (nodes) {
+    console.log('file system nodes', nodes);
+    // keep.txt.ac71teh8mja.tmp
+  });
+});
+
+// let's say I wrote keep.txt.x7t7sq926.tmp with my own mechanism
+safeReplace.commitAsync('keep.txt.x7t7sq926.tmp', 'keep.txt').then(function () {
   fs.readdir('.', function (nodes) {
     console.log('file system nodes', nodes);
     // keep.txt
     // keep.txt.bak
-    // keep.txt.ac71teh8mja.tmp
+  });
+});
+
+// let's say I want to revert the file from the '.bak'
+safeReplace.revertAsync('keep.txt').then(function () {
+  fs.readdir('.', function (nodes) {
+    console.log('file system nodes', nodes);
+    // keep.txt
+    // keep.txt.bak
   });
 });
 ```
