@@ -1,6 +1,6 @@
 {
   "name": "safe-replace",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A micro-module for safely replacing a file.",
   "main": "index.js",
   "scripts": {
