@@ -85,9 +85,12 @@ function create(options) {
         });
       });
     }
+  , tmpnamefn: tmpnamefn
+  , baknamefn: baknamefn
+  , create: create
   };
 
   return sfs;
 }
 
-module.exports.create = create;
+module.exports = create();
